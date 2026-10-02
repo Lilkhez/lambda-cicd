@@ -8,6 +8,10 @@ on:
       - 'lambda/**'
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy-lambda:
     runs-on: ubuntu-latest # sets up or specify the runner
