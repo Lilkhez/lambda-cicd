@@ -1,0 +1,30 @@
+name: AWS Lambda Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'lambda/'
+
+jobs:
+  deploy-lambda:
+    runs-on: ubuntu-latest # sets up or specify the runner
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python # Sets up python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.14'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r lambda/requirement.txt -t lambda/
+
+      - name: Deploy Lambda Function # Zips lambda directory and update lambda function
+        run: |
+          cd lambda
+          zip -r lambda.zip
+          aws lambda update-function-code --function-name test-cicd-lambda --zip-file file://lambda.zip 
